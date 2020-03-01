@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+                    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd     
+                    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+                    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+	<context:component-scan base-package="com.kuwy.security" />
+	<!-- <context:component-scan base-package="com.kuwy.security.config" />
+	<context:component-scan base-package="com.kuwy.security.service" />
+	<context:component-scan base-package="com.kuwy.security.dao" />
+	 -->
+	<mvc:annotation-driven></mvc:annotation-driven>
+	<mvc:default-servlet-handler />
+	<task:annotation-driven />
+	<!-- Creating TransactionManager Bean, since JDBC we are creating of type 
+		DataSourceTransactionManager -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- jdbcTemplate uses dataSource -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- MySQL DB DataSource -->
+
+	<!-- HikariCP configuration -->
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+	    <constructor-arg ref="hikariConfig" />
+	</bean>
+	 
+	 
+	 
+		<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+	
+		<property name="dataSourceClassName"> 
+		<value>com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource</value>
+		</property>
+		
+		<property name="dataSourceProperties">
+        <props>
+            <prop key="url">jdbc:mysql://localhost:3306/kuwy_tech</prop>
+            <prop key="user">root</prop>
+            <prop key="password">root</prop>
+            <prop key="cachePrepStmts">true</prop>
+            <prop key="prepStmtCacheSize">250</prop>
+            <prop key="prepStmtCacheSqlLimit">2048</prop>
+            <prop key="useServerPrepStmts">true</prop>
+            <prop key="useLocalSessionState">true</prop>
+            <prop key="rewriteBatchedStatements">true</prop>
+            <prop key="cacheResultSetMetadata">true</prop>
+            <prop key="cacheServerConfiguration">true</prop>
+            <prop key="elideSetAutoCommits">true</prop>
+            <prop key="maintainTimeStats">false</prop>
+        </props>
+   	  </property>
+   
+   		 <property name="poolName">
+		<value>SPRING HIKRICP</value>
+		</property>
+		
+		
+		<property name="connectionTestQuery">
+		<value>SELECT 1</value>
+		</property>
+		
+		<property name="maximumPoolSize">
+		<value>5</value>
+		</property>
+		<!-- 
+		<property name="idleTimeout">
+		<value>600000</value>
+		</property>
+		
+		<property name="connectionTimeout">
+		<value>300000</value>
+		</property>
+		 -->
+		<property name="minimumIdle">
+		<value>3</value>
+		</property> 
+		
+	    </bean> 
+		
+		
+	<!--  Service Implementation Details 
+	<bean id="UserService" class="com.kuwy.security.service.UserServiceImpl"></bean>
+	<bean id="AuthenticationFacadeService" class="com.kuwy.security.service.AuthenticationFacadeServiceImpl"></bean>
+
+
+	 DAO Implementation Details  
+	<bean id="UserDao" class="com.kuwy.security.dao.UserDaoImpl"></bean>
+	   -->
+	
+
+</beans>
